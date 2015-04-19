@@ -9,15 +9,15 @@ router.get('/', function(req, res) {
 });
 
 router.get('/assign', function(req, res) {
-  db.associate_ip('hahahaha', function(result) {
+  db.associate_ip('10.10.10.10', function(result) {
     res.send(result);
   });
 });
 
 router.get('/release', function(req, res) {
-  db.release_ip('hahahaha', function(result) {
+  db.release_ip('10.10.10.10', function(result) {
     res.send(result);
-  }
+  });
 });
 
 router.get('/release-all', function(req, res) {

@@ -1,4 +1,5 @@
 var exec = require('child_process').exec;
+var execSync = require('child_process').execSync;
 var console = require('console');
 var db = require('mongoskin').db('mongodb://localhost:27017/proxies');
 
@@ -9,11 +10,20 @@ function _list_all(ret) {
 function _associate_ip(ip, ret) {
   db.collection('ssh').findAndModify({inuse: false}, [], {$set: {inuse: true}}, function(err, result) {
     if (result) {
-      var port = db.collection('ssh').find({_id: result._id});
-      exec('./bin/start.sh ' + ip, function(err, stdout) {
-        db.collection('ssh').update({_id: result._id}, {$set: {ip: ip, pid: stdout.trim()}}, function(err, result) {
-          ret(stdout);
-        });
+      db.collection('ssh').findOne({_id: result._id}, function(err, port) {
+        console.log('./bin/start.sh ' + ip + ' ' + port.port);
+        //exec(String('./bin/start.sh ' + ip + ' ' + port.port), function(err, stdout) {
+        //  console.log("There");
+        //  db.collection('ssh').update({_id: result._id}, {$set: {ip: ip, pid: stdout.trim()}}, function(err, result) {
+        //    console.log("Here");
+        //    ret(stdout);
+        //  });
+        var x = execSync('./bin/start.sh ' + ip + ' ' + port.port);
+        console.log(x);
+        x = x.trim();
+        db.conllection('ssh').update({_id: result._id}, {$set: {ip: ip, pid: x}});
+        ret(x);
+        //});
       });
     } else {
       ret('fail');
@@ -22,11 +32,14 @@ function _associate_ip(ip, ret) {
 }
 
 function _release_ip(ip, ret) {
-  db.collection('ssh').find({ip: ip}).forEach(function(port) {
-    exec('./bin/stop.sh ' + port.pid, function(error, stdout) {
-      db.collection('ssh').update({_id: port._id}, {ip: '', pid: ''});
+  db.collection('ssh').find({ip: ip}, function(err, port) {
+    port.each(function() {
+      exec('./bin/stop.sh ' + port.pid, function(error, stdout) {
+        db.collection('ssh').update({_id: port._id}, {ip: '', pid: ''});
+      });
     });
   });
+  ret('Ha');
 }
 
 function _release_all() {

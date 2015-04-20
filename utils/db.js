@@ -22,7 +22,7 @@ function _associate_ip(ip, ret) {
         console.log(x);
         x = x.trim();
         db.conllection('ssh').update({_id: result._id}, {$set: {ip: ip, pid: x}});
-        ret(x);
+        ret({ip: ip, port: port.port);
         //});
       });
     } else {

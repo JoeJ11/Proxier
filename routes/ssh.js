@@ -1,7 +1,7 @@
 var express = require('express');
 var request = require('request');
 var console = require('console');
-var db = require('../utils/db');
+var db = require('../utils/proxy_entry');
 var router = express.Router();
 /* GET home page. */
 

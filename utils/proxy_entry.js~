@@ -1,0 +1,15 @@
+var db = require('mongoskin').db('mongodb://localhost:27017/proxies')
+
+db.bind('entry');
+
+function _list_all(ret) {
+    db.entry.find().toArray(function(err, result) {
+	ret(result);
+    });
+}
+
+function _new_entry(proxy, target, token, ret) {
+    db.entry.insert({proxy: proxy, target: target, token: token}, function(err, result) {
+	ret(result);
+    })
+}

@@ -3,9 +3,14 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var cluster = require('cluster');
 
 var ssh = require('./routes/ssh');
 var users = require('./routes/users');
+
+if (cluster.isMaster) {
+
+
 
 var app = express();
 
@@ -21,8 +26,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/ssh', ssh);
-app.use('/users', users);
+app.use('/', ssh);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

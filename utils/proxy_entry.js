@@ -24,7 +24,7 @@ function _delete_entry(target, ret) {
 function _find_target(proxy, ret) {
     db.entry.findOne({proxy: proxy}, function(err, entry) {
 	if (err || !entry) ret(err, '');
-	else ret(null, entry.target);
+	else ret(null, entry);
     });
 }
 

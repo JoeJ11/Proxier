@@ -1,0 +1,17 @@
+var db = require('mongoskin').db('mongodb://localhost:27017/proxies')
+
+db.bind('lastpage');
+
+function _set_last(proxy, target, ret) {
+    db.lastpage.update({proxy: proxy}, {$set: {target: target}},
+		       {upsert: true}, function(err, result) {
+			   ret()
+		       });
+}
+
+function _get_last(proxy, ret) {
+    db.lastpage.findOne({proxy, proxy}, function(err, entry) {
+	if (err || !entry) ret(err, '');
+	else ret(null, entry.target);
+    }
+}

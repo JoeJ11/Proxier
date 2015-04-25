@@ -40,10 +40,14 @@ router.use('/', function(req, res) {
 		    //Add authentication
 		    var url = target + req.url;
 		    if (req.method == 'GET') {
-			request.get(url).pipe(res);
+			request.get(url).on('error', function(err) {
+			    console.log(err)
+			}).pipe(res);
 		    } else if (req.method == 'POST') {
 			console.log(req.body);
-			request.post(url, {form: req.body}).pipe(res);
+			request.post(url, {form: req.body}).on('error', function(err) {
+			    console.log(err);
+			}).pipe(res);
 		    }
 		}
 	    });
@@ -54,31 +58,19 @@ router.use('/', function(req, res) {
 		if (req.method == 'GET') {
 		    request.get(url).on('response', function(response) {
 			response.headers['set-cookie'] = 'token='+entry.token;
+		    }).on('error', function(err) {
+			console.log(err)
 		    }).pipe(res);
 		} else if (req.method == 'POST') {
 		    request.post(url, {form: req.body}).on('response', function(response) {
 			response.headers['set-cookie'] = 'token='+entry.token;
+		    }).on('error', function(err) {
+			console.log(err)
 		    }).pipe(res);
 		}
 	    });
 	}
     });
 });
-
-//   db.associate_ip('10.10.10.10', function(result) {
-//     res.send(result);
-//   });
-// });
-
-// router.get('/release', function(req, res) {
-//   db.release_ip('10.10.10.10', function(result) {
-//     res.send(result);
-//   });
-// });
-
-// router.get('/release-all', function(req, res) {
-//   db.release_all();
-//   res.send('Ha');
-// });
 
 module.exports = router;

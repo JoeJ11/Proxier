@@ -7,13 +7,13 @@ var router = express.Router();
 /* GET home page. */
 
 
-router.get('/thu-manage/create', function(req, res) {
+router.post('/thu-manage/create', function(req, res) {
     proxydb.create_entry(req.param('proxy'), req.param('target'), req.param('token'), function(result) {
 	res.send(result);
     });
 });
 
-router.get('/thu-manage/delete', function(req, res) {
+router.post('/thu-manage/delete', function(req, res) {
     proxydb.delete_entry(req.param('target'), function(result) {
 	res.send(result);
     });

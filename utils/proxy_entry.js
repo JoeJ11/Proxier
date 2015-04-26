@@ -1,4 +1,5 @@
-var db = require('mongoskin').db('mongodb://localhost:27017/proxies')
+var crypto = require('crypto');
+var db = require('mongoskin').db('mongodb://localhost:27017/proxies');
 
 db.bind('entry');
 
@@ -9,7 +10,8 @@ function _list_all(ret) {
 }
 
 function _create_entry(proxy, target, token, ret) {
-    db.entry.insert({proxy: proxy, target: target, token: token}, function(err, result) {
+    var proxy_str = crypto.randomBytes(64).toString('hex');
+    db.entry.insert({proxy: proxy_str, target: target, token: token}, function(err, result) {
 	ret(result);
     })
 }

@@ -8,7 +8,7 @@ var router = express.Router();
 
 
 router.post('/thu-manage/create', function(req, res) {
-    proxydb.create_entry(req.param('proxy'), req.param('target'), req.param('token'), function(result) {
+    proxydb.create_entry(req.param('mode'), req.param('target'), req.param('token'), function(result) {
 	res.send(result);
     });
 });
@@ -55,17 +55,20 @@ router.use('/', function(req, res) {
 	    var url = entry.target + '/' + pathlist.slice(2).join('/');
 	    lastdb.set_last(entry.token, entry.target, function() {
 		if (req.method == 'GET') {
-		    request.get(url).on('response', function(response) {
-			response.headers['set-cookie'] = 'token='+entry.token;
-		    }).on('error', function(err) {
-			console.log(err)
-		    }).pipe(res);
+		    request.get(url, {auth: {user: 'thu_mooc',
+					     pass: 'hellokitty'}}).on('response', function(response) {
+						 response.headers['set-cookie'] = 'token='+entry.token;
+					     }).on('error', function(err) {
+						 console.log(err)
+					     }).pipe(res);
 		} else if (req.method == 'POST') {
-		    request.post(url, {form: req.body}).on('response', function(response) {
-			response.headers['set-cookie'] = 'token='+entry.token;
-		    }).on('error', function(err) {
-			console.log(err)
-		    }).pipe(res);
+		    request.post(url, {form: req.body,
+				       auth: {user: 'thu_mooc',
+					      pass: 'hellokitty'}}).on('response', function(response) {
+						  response.headers['set-cookie'] = 'token='+entry.token;
+					      }).on('error', function(err) {
+						  console.log(err)
+					      }).pipe(res);
 		}
 	    });
 	}

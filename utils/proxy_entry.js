@@ -11,7 +11,7 @@ function _list_all(ret) {
 
 function _create_entry(mode, target, token, ret) {
     var proxy_str = crypto.randomBytes(20).toString('hex');
-    db.entry.insert({proxy: proxy_str, target: target, token: token, mode: mode}, function(err, result) {
+    db.entry.insert({proxy: proxy_str, target: 'http://' + target, token: token, mode: mode}, function(err, result) {
 	ret(result);
     })
 }

@@ -31,7 +31,6 @@ router.use('/', function(req, res) {
     var proxy = pathlist[1];
     proxydb.find_target(proxy, function(err, entry) {
 	if (err || !entry) {
-	    console.log(pathlist);
 	    var token = req.cookies['token'];
 	    lastdb.get_last(token, function(err, target) {
 		if (err || !target) {

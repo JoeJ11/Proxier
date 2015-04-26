@@ -4,7 +4,6 @@ var db = require('mongoskin').db('mongodb://localhost:27017/proxies')
 db.bind('lastpage');
 
 function _set_last(token, target, ret) {
-    console.log(target);
     db.lastpage.update({token: token}, {$set: {target: target}},
 		       {upsert: true}, function(err, result) {
 			   ret();

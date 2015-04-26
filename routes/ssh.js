@@ -55,20 +55,19 @@ router.use('/', function(req, res) {
 	    var url = entry.target + '/' + pathlist.slice(2).join('/');
 	    lastdb.set_last(entry.token, entry.target, function() {
 		if (req.method == 'GET') {
-		    request.get(url, {auth: {user: 'thu_mooc',
-					     pass: 'hellokitty'}}).on('response', function(response) {
-						 response.headers['set-cookie'] = 'token='+entry.token;
-					     }).on('error', function(err) {
-						 console.log(err)
-					     }).pipe(res);
+		    request.get(url).auth('thu_mooc', 'hellokitty')
+			.on('response', function(response) {
+			    response.headers['set-cookie'] = 'token='+entry.token;
+			}).on('error', function(err) {
+			    console.log(err)
+			}).pipe(res);
 		} else if (req.method == 'POST') {
-		    request.post(url, {form: req.body,
-				       auth: {user: 'thu_mooc',
-					      pass: 'hellokitty'}}).on('response', function(response) {
-						  response.headers['set-cookie'] = 'token='+entry.token;
-					      }).on('error', function(err) {
-						  console.log(err)
-					      }).pipe(res);
+		    request.post(url, {form: req.body}).auth(user: 'thu_mooc', 'hellokitty')
+			.on('response', function(response) {
+			    response.headers['set-cookie'] = 'token='+entry.token;
+			}).on('error', function(err) {
+			    console.log(err)
+			}).pipe(res);
 		}
 	    });
 	}

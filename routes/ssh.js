@@ -9,7 +9,7 @@ var router = express.Router();
 
 router.post('/thu-manage/create', function(req, res) {
     proxydb.create_entry(req.param('mode'), req.param('target'), req.param('token'), function(result) {
-	res.send(result);
+	res.send(result[0]);
     });
 });
 

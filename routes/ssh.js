@@ -62,7 +62,7 @@ router.use('/', function(req, res) {
 			    console.log(err)
 			}).pipe(res);
 		} else if (req.method == 'POST') {
-		    request.post(url, {form: req.body}).auth(user: 'thu_mooc', 'hellokitty')
+		    request.post(url, {form: req.body}).auth('thu_mooc', 'hellokitty')
 			.on('response', function(response) {
 			    response.headers['set-cookie'] = 'token='+entry.token;
 			}).on('error', function(err) {
